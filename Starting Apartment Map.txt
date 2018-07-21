@@ -1,0 +1,7 @@
+						 LeaveApartment
+Apartment EmptyAptHallway EmptyHallway EmptyAptHallway Apartment
+						  EmptyHallway
+						  EmptyHallway
+Apartment EmptyAptHallway EmptyHallway EmptyAptHallway Apartment
+						  EmptyHallway
+						   LockedDoor
