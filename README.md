@@ -8,4 +8,4 @@ I will be expanding on this idea as I go along. I will update with Milestones an
 
 ## Installing
 
-Will Be Updated Soon (When Py2EXE is created
+Will Be Updated Soon (When Py2EXE is added)
