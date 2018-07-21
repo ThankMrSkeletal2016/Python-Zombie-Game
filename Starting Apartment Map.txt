@@ -2,6 +2,6 @@
 Apartment EmptyAptHallway EmptyHallway EmptyAptHallway Apartment
                           EmptyHallway
                           EmptyHallway
-Apartment EmptyAptHallway EmptyHallway EmptyAptHallway Apartment
+Apartment EmptyAptHallway EmptyHallway EmptyAptHallway StartingApartment
                           EmptyHallway
                            LockedDoor
