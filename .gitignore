@@ -6,3 +6,7 @@
 .idea/workspace.xml
 *.pyc
 *.pyc
+Python Zombies/__pycache__/player.cpython-36.pyc
+Python Zombies/__pycache__/items.cpython-36.pyc
+Python Zombies/__pycache__/enemies.cpython-36.pyc
+Python Zombies/__pycache__/actions.cpython-36.pyc
