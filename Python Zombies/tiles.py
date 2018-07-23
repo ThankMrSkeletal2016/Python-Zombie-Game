@@ -1,10 +1,9 @@
-"""Describes the tiles in the world space."""
 __author__ = 'Ian Kent'
 
 import enemies, world, actions, items, random
-from player import Player
 
-
+"""The base class for a tile within the world space"""
+"""------------------------------------------------"""
 class MapTile:
     """The base class for a tile within the world space"""
 
@@ -46,49 +45,8 @@ class MapTile:
         return moves
 
 
-class StartingRoom(MapTile):
-    def intro_text(self):
-        return """
-       You wake up in an apartment. You hear a sound across the hall.
-        """
-
-    def modify_player(self, the_player):
-        # Room has no action on player
-        pass
-
-
-class EmptyHallway(MapTile):
-    def intro_text(self):
-        return """
-        An empty apartment hallway
-        """
-
-    def modify_player(self, the_player):
-        # Room has no action on player
-        pass
-
-
-class EmptyApartment(MapTile):
-    def intro_text(self):
-        return """
-        An empty apartment with nothing of interest.
-        """
-
-    def modify_player(self, the_player):
-        # Room has no action on player
-        pass
-
-
-class EmptyAptHallway(MapTile):
-    def intro_text(self):
-        return """
-        An empty apartment hallway leading to an apartment
-        """
-
-    def modify_player(self, the_player):
-        # Room has no action on player
-        pass
-
+"""The base tiles that inherit the original Map Tile, and are passed on"""
+"""------------------------------------------------"""
 
 class LootRoom(MapTile):
     """A room that adds something to the player's inventory"""
@@ -102,6 +60,16 @@ class LootRoom(MapTile):
 
     def modify_player(self, the_player):
         self.add_loot(the_player)
+
+class ConditionRoom(MapTile):
+    """A room that has a condition that depends on character"""
+
+    def __init__(self, x, y, name):
+        self.name = name
+        super().__init__(x, y)
+
+    def modify_player(self, the_player):
+        pass
 
 
 class GoldRoom(MapTile):
@@ -117,7 +85,25 @@ class GoldRoom(MapTile):
     def modify_player(self, the_player):
         self.add_gold(the_player, self.amt)
 
+class EnemyRoom(MapTile):
+    def __init__(self, x, y, enemy):
+        self.enemy = enemy
+        super().__init__(x, y)
 
+    def modify_player(self, the_player):
+        if self.enemy.is_alive():
+            enemy_damage = random.randint(0, self.enemy.damage)
+            the_player.hp = the_player.hp - enemy_damage
+            print("Enemy does {} damage. You have {} HP remaining.".format(enemy_damage, the_player.hp))
+
+    def available_actions(self):
+        if self.enemy.is_alive():
+            return [actions.Flee(tile=self), actions.Attack(enemy=self.enemy)]
+        else:
+            return self.adjacent_moves()
+
+"""Item Tiles"""
+"""------------------------------------------------"""
 class FindDaggerRoom(LootRoom):
     def __init__(self, x, y):
         super().__init__(x, y, items.Dagger())
@@ -138,27 +124,12 @@ class Find5GoldRoom(GoldRoom):
         Someone dropped a 5 gold piece. You pick it up.
         """
 
-
-class EnemyRoom(MapTile):
-    def __init__(self, x, y, enemy):
-        self.enemy = enemy
-        super().__init__(x, y)
-
-    def modify_player(self, the_player):
-        if self.enemy.is_alive():
-            the_player.hp = the_player.hp - random.randint(0, self.enemy.damage)
-            print("Enemy does {} damage. You have {} HP remaining.".format(self.enemy.damage, the_player.hp))
-
-    def available_actions(self):
-        if self.enemy.is_alive():
-            return [actions.Flee(tile=self), actions.Attack(enemy=self.enemy)]
-        else:
-            return self.adjacent_moves()
-
-
+"""Enemy Tiles"""
+"""------------------------------------------------"""
 class EasyZombieRoom(EnemyRoom):
     def __init__(self, x, y):
         super().__init__(x, y, enemies.EasyZombie())
+        print(self.enemy.gold)
 
     def intro_text(self):
         if self.enemy.is_alive():
@@ -171,28 +142,68 @@ class EasyZombieRoom(EnemyRoom):
             The corpse of a dead Zombie rots on the ground.
             """
 
+"""Condition Rooms"""
+"""------------------------------------------------"""
 
-class SnakePitRoom(MapTile):
-    def intro_text(self):
-        return """
-        You have fallen into a pit of deadly snakes!
+class LeaveApartment(ConditionRoom):
+    def __init__(self, x, y):
+        super().__init__(x, y, "Leave Apartment")
 
-        You have died!
-        """
-
-    def modify_player(self, player):
-        player.hp = 0
-
-
-class LeaveApartment(MapTile):
-    def intro_text(self):
-        return """
-        The Door to the outside. You walk out into the world.
-        """
+    def intro_text(self, player):
+        if player.gold > 20:
+            return """
+            The Door to the outside. You walk out into the world.
+            """
+        else :
+            return """
+            You must secure the building before you leave!
+            """
 
     def modify_player(self, player):
-        player.victory = True
+        if player.gold > 20:
+            player.victory = True
 
+"""Basic Rooms"""
+"""------------------------------------------------"""
+class StartingRoom(MapTile):
+    def intro_text(self):
+        return """
+       You wake up in an apartment. You hear a sound across the hall.
+        """
+
+    def modify_player(self, the_player):
+        # Room has no action on player
+        pass
+
+class EmptyHallway(MapTile):
+    def intro_text(self):
+        return """
+        An empty apartment hallway
+        """
+
+    def modify_player(self, the_player):
+        # Room has no action on player
+        pass
+
+class EmptyApartment(MapTile):
+    def intro_text(self):
+        return """
+        An empty apartment with nothing of interest.
+        """
+
+    def modify_player(self, the_player):
+        # Room has no action on player
+        pass
+
+class EmptyAptHallway(MapTile):
+    def intro_text(self):
+        return """
+        An empty apartment hallway leading to an apartment
+        """
+
+    def modify_player(self, the_player):
+        # Room has no action on player
+        pass
 
 class LockedDoor(MapTile):
     def intro_text(self):

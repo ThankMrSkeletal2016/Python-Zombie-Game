@@ -1,4 +1,3 @@
-"""Describes the items in the game."""
 __author__ = 'Ian Kent'
 
 import random

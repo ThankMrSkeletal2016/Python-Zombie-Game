@@ -4,7 +4,7 @@ import world, items
 __author__ = 'Ian Kent'
 
 
-class Player():
+class Player:
     def __init__(self):
         self.inventory = [items.Rock()]
         self.gold = 15
@@ -34,7 +34,12 @@ class Player():
     def move(self, dx, dy):
         self.location_x += dx
         self.location_y += dy
-        print(world.tile_exists(self.location_x, self.location_y).intro_text())
+        try:
+            if world.tile_exists(self.location_x, self.location_y).name == "Leave Apartment":
+                print(world.tile_exists(self.location_x, self.location_y).intro_text(self))
+        except AttributeError:
+            print(world.tile_exists(self.location_x, self.location_y).intro_text())
+
 
     def move_north(self):
         self.move(dx=0, dy=-1)
@@ -63,6 +68,8 @@ class Player():
         print("You did {} damage".format(dmg))
         if not enemy.is_alive():
             print("You killed {}!".format(enemy.name))
+            print("You gained {} gold!".format(enemy.gold))
+            self.gold += enemy.gold
         else:
             print("{} HP is {}.".format(enemy.name, enemy.hp))
 

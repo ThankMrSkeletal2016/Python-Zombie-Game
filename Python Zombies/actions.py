@@ -1,4 +1,3 @@
-"""Describes the actions a player can make in the game"""
 __author__ = 'Ian Kent'
 
 from player import Player
