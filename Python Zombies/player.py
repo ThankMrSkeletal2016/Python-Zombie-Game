@@ -6,8 +6,9 @@ __author__ = 'Ian Kent'
 
 class Player():
     def __init__(self):
-        self.inventory = [items.Gold(15), items.Rock()]
-        self.hp = 10
+        self.inventory = [items.Rock()]
+        self.gold = 15
+        self.hp = 20
         self.location_x, self.location_y = world.starting_position
         self.victory = False
 
@@ -22,6 +23,7 @@ class Player():
     def print_inventory(self):
         for item in self.inventory:
             print(item, '\n')
+        print("Gold : {}".format(self.gold))
 
     def print_map(self):
         print("")
@@ -70,3 +72,8 @@ class Player():
         r = random.randint(0, len(available_moves) - 1)
         self.do_action(available_moves[r])
 
+    def remove_gold(self, amt):
+        self.gold -= amt
+
+    def add_gold(self, amt):
+        self.gold += amt

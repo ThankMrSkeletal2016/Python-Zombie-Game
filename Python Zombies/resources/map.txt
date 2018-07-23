@@ -1,5 +1,5 @@
 		LeaveApartment
-EmptyApartment	EmptyAptHallway	EmptyHallway	EmptyAptHallway	FindDaggerRoom
+Find5GoldRoom	EmptyAptHallway	EmptyHallway	EmptyAptHallway	FindDaggerRoom
 		EmptyHallway
 		EmptyHallway
 EasyZombieRoom	EmptyAptHallway	EmptyHallway	EmptyAptHallway	StartingRoom

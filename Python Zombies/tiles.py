@@ -1,12 +1,13 @@
 """Describes the tiles in the world space."""
 __author__ = 'Ian Kent'
 
-
 import enemies, world, actions, items, random
+from player import Player
 
 
 class MapTile:
     """The base class for a tile within the world space"""
+
     def __init__(self, x, y):
         """Creates a new tile.
 
@@ -52,7 +53,7 @@ class StartingRoom(MapTile):
         """
 
     def modify_player(self, the_player):
-        #Room has no action on player
+        # Room has no action on player
         pass
 
 
@@ -63,8 +64,9 @@ class EmptyHallway(MapTile):
         """
 
     def modify_player(self, the_player):
-        #Room has no action on player
+        # Room has no action on player
         pass
+
 
 class EmptyApartment(MapTile):
     def intro_text(self):
@@ -73,8 +75,9 @@ class EmptyApartment(MapTile):
         """
 
     def modify_player(self, the_player):
-        #Room has no action on player
+        # Room has no action on player
         pass
+
 
 class EmptyAptHallway(MapTile):
     def intro_text(self):
@@ -83,12 +86,13 @@ class EmptyAptHallway(MapTile):
         """
 
     def modify_player(self, the_player):
-        #Room has no action on player
+        # Room has no action on player
         pass
 
 
 class LootRoom(MapTile):
     """A room that adds something to the player's inventory"""
+
     def __init__(self, x, y, item):
         self.item = item
         super().__init__(x, y)
@@ -98,6 +102,20 @@ class LootRoom(MapTile):
 
     def modify_player(self, the_player):
         self.add_loot(the_player)
+
+
+class GoldRoom(MapTile):
+    """A room that adds something to the player's inventory"""
+
+    def __init__(self, x, y, amt):
+        self.amt = amt
+        super().__init__(x, y)
+
+    def add_gold(self, the_player, amt):
+        the_player.gold += amt
+
+    def modify_player(self, the_player):
+        self.add_gold(the_player, self.amt)
 
 
 class FindDaggerRoom(LootRoom):
@@ -111,9 +129,9 @@ class FindDaggerRoom(LootRoom):
         """
 
 
-class Find5GoldRoom(LootRoom):
+class Find5GoldRoom(GoldRoom):
     def __init__(self, x, y):
-        super().__init__(x, y, items.Gold(5))
+        super().__init__(x, y, 5)
 
     def intro_text(self):
         return """
@@ -128,7 +146,7 @@ class EnemyRoom(MapTile):
 
     def modify_player(self, the_player):
         if self.enemy.is_alive():
-            the_player.hp = the_player.hp - random.randint(0,self.enemy.damage)
+            the_player.hp = the_player.hp - random.randint(0, self.enemy.damage)
             print("Enemy does {} damage. You have {} HP remaining.".format(self.enemy.damage, the_player.hp))
 
     def available_actions(self):
@@ -175,6 +193,7 @@ class LeaveApartment(MapTile):
     def modify_player(self, player):
         player.victory = True
 
+
 class LockedDoor(MapTile):
     def intro_text(self):
         return """
@@ -182,5 +201,5 @@ class LockedDoor(MapTile):
         """
 
     def modify_player(self, the_player):
-        #Room has no action on player
+        # Room has no action on player
         pass
